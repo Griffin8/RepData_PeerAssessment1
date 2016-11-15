@@ -6,7 +6,7 @@ output:
 ---
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.align='center', fig.path='Figs/',
-                      echo=TRUE, results="asis", warning=FALSE, message=FALSE)
+                      echo=TRUE, warning=FALSE, message=FALSE)
 
 ```
 
@@ -35,18 +35,20 @@ library(doBy)
 df.byDay <- summaryBy(steps ~ date, data=df, FUN = list(sum, mean, median), na.rm=TRUE)
 
 ```
-1. Make a histogram of the total number of steps taken each day
-```{r}
-## get total steps per day
-##df.total <- setNames(aggregate(df$steps, by=list(df$date), FUN="sum"),c("date","steps"))
+1. Calculate the total number of steps taken per day
 
-##df.total.steps <- na.omit(as.numeric(df.total$steps))
-hist(df.byDay$steps.sum, main="Total number of steps taken per day in two months", xlab="Total Steps")
+```{r}
+dfTotal.Byday <- summaryBy(steps ~ date, data=df, FUN = list(sum), na.rm=TRUE)
+dfTotal.Byday
+```
+```{r}
+
+hist(dfTotal.Byday$steps.sum, main="Total number of steps taken per day in two months", xlab="Total Steps")
 ```
 2. Calculate and report the mean and median total number of steps taken per day
 ```{r}
 ## The mean and median is calculated in df.byDate. We just need to display them
-##subset(df.byDay,select = c(date, steps.mean, steps.median))
+subset(df.byDay, select = c(date, steps.mean, steps.median))
 ```
 
 ```{r}
@@ -97,6 +99,12 @@ dfNewMedian <- transform(dfNewMedian, steps_new = na.aggregate(steps, by=interva
 ```
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+a histogram of the total number of steps taken each day 
+```{r}
+dfNewTotal.byDay <- summaryBy(steps_new ~ date, data=dfNewMean, FUN = list(sum))
+hist(dfNewTotal.byDay$steps_new.sum, main="Total number of steps taken per day (with Filled Data)", xlab="Total Steps")
+```
 
 As shown in the graph below, after filling in missing data with mean values for that day, only the mean total step between 30 to 40 increases. The median values are also changes.
 ```{r fig.width=14, fig.height=14, fig.align='center'}
